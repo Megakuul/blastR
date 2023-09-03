@@ -1,8 +1,9 @@
 # Variables
-SOURCE = bootloader.c
-OBJECT = bootloader.o
+SOURCE = src/main.c
+OBJECT = blastr.o
 OUTPUTDIR = UEFI/EFI/BOOT
-OUTPUT = bootx64.efi
+OUTPUT = BOOTX64.EFI
+# Librarys are set to debian/ubuntu libs, on other distributions they may be elsewhere
 EFISUPPORT = /usr/lib/crt0-efi-x86_64.o
 EFIINC = /usr/include/efi
 EFIINC_X64 = /usr/include/efi/x86_64
@@ -17,10 +18,10 @@ OBJCOPYFLAGS = -j .text -j .sdata -j .data -j .dynamic -j .dynsym -j .rel -j .re
 # Rules
 all: $(OUTPUT) move
 
-$(OUTPUT): bootloader.so
+$(OUTPUT): blastr.so
 	objcopy $(OBJCOPYFLAGS) $< $@
 
-bootloader.so: $(OBJECT)
+blastr.so: $(OBJECT)
 	ld $(OBJECT) $(EFISUPPORT) $(LDFLAGS) -o $@
 
 $(OBJECT): $(SOURCE)
@@ -30,6 +31,6 @@ move:
 	mv $(OUTPUT) $(OUTPUTDIR)
 
 clean:
-	rm -f $(OBJECT) bootloader.so $(OUTPUT)
+	rm -f $(OBJECT) blastr.so $(OUTPUT)
 
 .PHONY: all clean
