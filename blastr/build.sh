@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# IMPORTANT #
-# This script is just for debugging purposes, it will be superseded by the blastR installer
-
 # Check if the script is being run as root
 if [[ $EUID -ne 0 ]]; then
    echo "This script must be run as root" 
@@ -28,22 +25,20 @@ echo "Image is generated [EFI: 99 MB] [VOL: $1 MB] ..."
 # Create Image
 dd if=/dev/zero of=blastr.img bs=$blk_sz count=$img_sz
 
-# Generate EFI & Volume partitions 
-gdisk blastr.img <<EOF
-o
-Y
+# Generate EFI & Volume partitions
+fdisk blastr.img <<EOF
+g
 n
-1
+
 
 +99M
+t
 ef00
 n
-2
 
 
-8300
+
 w
-Y
 EOF
 
 # Create loopdevice for EFI partition
